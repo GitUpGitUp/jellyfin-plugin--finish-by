@@ -12,7 +12,7 @@
         "changelog": "Initial public release for Jellyfin 12.4.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.0.0.zip",
-        "checksum": "e4e0d34a6f002c7a39fc32050f99ea4947d32b4b",
+        "checksum": "5e733b2bba127fabdc9d1ac1fb60aceb",
         "timestamp": "2026-11-13T04:28:55Z"
       },
       {
@@ -20,7 +20,7 @@
         "changelog": "Add support for Jellyfin 10.11.11.",
         "targetAbi": "10.11.11.0",
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.0.0.0_jellyfin10.11.zip",
-        "checksum": "083e4dd996ca19d88b644dca7638540400591833",
+        "checksum": "1b45bd342cba9a719828d31b1de53126",
         "timestamp": "2026-11-13T04:59:06Z"
       }
     ]
