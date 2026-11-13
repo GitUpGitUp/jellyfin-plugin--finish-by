@@ -8,7 +8,7 @@ This is a server-wide display filter for Jellyfin API lists, including the main 
 
 ## Install from Jellyfin
 
-This release targets Jellyfin **12.4**. In Jellyfin, open **Dashboard → Plugins → Repositories**, add a repository named **Finish By**, and use this URL:
+The catalog includes builds for Jellyfin **10.11.11** and **12.4**. In Jellyfin, open **Dashboard → Plugins → Repositories**, add a repository named **Finish By**, and use this URL:
 
 ```text
 https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/manifest.json
@@ -18,14 +18,15 @@ Open the **Catalog** tab, install **Finish By**, and restart Jellyfin. Then open
 
 ## Build manually
 
-Install the .NET 10 SDK, then run:
+Install the .NET 10 SDK, then publish the target matching your server:
 
 ```sh
 cd FinishBy
-dotnet publish Jellyfin.Plugin.FinishBy.csproj -c Release -o publish
+dotnet publish Jellyfin.Plugin.FinishBy.csproj -f net9.0 -c Release -o publish/10.11
+dotnet publish Jellyfin.Plugin.FinishBy.csproj -f net10.0 -c Release -o publish/12.4
 ```
 
-Copy `publish/Jellyfin.Plugin.FinishBy.dll`, `publish/Jellyfin.Plugin.FinishBy.deps.json`, and `meta.json` into a new `FinishBy` folder under the Jellyfin server's `plugins` directory, then restart Jellyfin. The referenced Jellyfin assemblies are supplied by the server. Match the `Jellyfin.Controller` and `Jellyfin.Model` package versions in the project file to your server version if needed.
+Copy the matching DLL and `.deps.json`, plus `compat/10.11/meta.json` for Jellyfin 10.11.11 or the root `meta.json` for Jellyfin 12.4, into a new `FinishBy` folder under the server's `plugins` directory. Restart Jellyfin. The referenced Jellyfin assemblies are supplied by the server.
 
 ## Scope
 

@@ -1,0 +1,13 @@
+{
+  "category": "General",
+  "description": "Shows items that can finish before a daily cutoff.",
+  "guid": "4bcae5ca-6589-47c6-9f8c-57f0cf5e2f41",
+  "name": "Finish By",
+  "overview": "Daily finish-time filter for Jellyfin library lists",
+  "owner": "GitUpGitUp",
+  "targetAbi": "10.11.11.0",
+  "version": "1.0.0.0",
+  "status": 0,
+  "autoUpdate": false,
+  "assemblies": ["Jellyfin.Plugin.FinishBy.dll"]
+}

@@ -14,6 +14,14 @@
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.0.0.zip",
         "checksum": "e4e0d34a6f002c7a39fc32050f99ea4947d32b4b",
         "timestamp": "2026-11-13T04:28:55Z"
+      },
+      {
+        "version": "1.0.0.0",
+        "changelog": "Add support for Jellyfin 10.11.11.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.0.0.0_jellyfin10.11.zip",
+        "checksum": "083e4dd996ca19d88b644dca7638540400591833",
+        "timestamp": "2026-11-13T04:59:06Z"
       }
     ]
   }

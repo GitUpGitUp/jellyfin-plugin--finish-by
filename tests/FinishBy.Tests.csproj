@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -9,7 +9,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
-    <PackageReference Include="Jellyfin.Model" Version="12.4.0" />
+    <PackageReference Include="Jellyfin.Model" Version="10.11.11" Condition="'$(TargetFramework)' == 'net9.0'" />
+    <PackageReference Include="Jellyfin.Model" Version="12.4.0" Condition="'$(TargetFramework)' == 'net10.0'" />
     <ProjectReference Include="../Jellyfin.Plugin.FinishBy.csproj" />
   </ItemGroup>
 </Project>
