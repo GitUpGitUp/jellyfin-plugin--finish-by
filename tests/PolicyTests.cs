@@ -56,6 +56,28 @@ public class PolicyTests
     }
 
     [Fact]
+    public void PreviousDayRuleContinuesAfterMidnight()
+    {
+        var config = new PluginConfiguration { TimeZoneId = "UTC" };
+        config.Days[(int)DayOfWeek.Friday] = new DayCutoff { Enabled = true, NextDay = true, CutoffMinutes = 2 * 60 };
+        Assert.Equal(TimeSpan.FromHours(3), FinishByPolicy.GetTimeRemaining(
+            config, new DateTimeOffset(2026, 11, 13, 23, 0, 0, TimeSpan.Zero)));
+        Assert.Equal(TimeSpan.FromMinutes(30), FinishByPolicy.GetTimeRemaining(
+            config, new DateTimeOffset(2026, 11, 14, 1, 30, 0, TimeSpan.Zero)));
+        Assert.Null(FinishByPolicy.GetTimeRemaining(
+            config, new DateTimeOffset(2026, 11, 14, 2, 30, 0, TimeSpan.Zero)));
+    }
+
+    [Fact]
+    public void OverrideTemporarilyDisablesFilter()
+    {
+        var config = WeekdayConfig();
+        config.OverrideUntilUnixSeconds = MondayAtEight.AddHours(1).ToUnixTimeSeconds();
+        Assert.Null(FinishByPolicy.GetTimeRemaining(config, MondayAtEight));
+        Assert.Equal(TimeSpan.Zero, FinishByPolicy.GetTimeRemaining(config, MondayAtEight.AddHours(2)));
+    }
+
+    [Fact]
     public void UnknownRuntimeIsHiddenButFoldersStayVisible()
     {
         Assert.False(FinishByPolicy.ShouldShow(new BaseItemDto { Type = BaseItemKind.Movie }, TimeSpan.FromHours(1)));

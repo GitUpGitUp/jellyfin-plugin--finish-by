@@ -8,24 +8,45 @@ public static class FinishByPolicy
 {
     public static TimeSpan? GetTimeRemaining(PluginConfiguration configuration, DateTimeOffset now)
     {
+        if (configuration.OverrideUntilUnixSeconds > now.ToUnixTimeSeconds())
+        {
+            return null;
+        }
+
         var zone = !string.IsNullOrWhiteSpace(configuration.TimeZoneId)
             && TimeZoneInfo.TryFindSystemTimeZoneById(configuration.TimeZoneId, out var configuredZone)
             ? configuredZone
             : TimeZoneInfo.Local;
         var local = TimeZoneInfo.ConvertTime(now, zone);
-        var index = (int)local.DayOfWeek;
-        if (configuration.Days is null || index >= configuration.Days.Length)
+        if (configuration.Days is null || configuration.Days.Length < 7)
         {
             return null;
         }
 
-        var day = configuration.Days[index];
+        var previousDay = configuration.Days[((int)local.DayOfWeek + 6) % 7];
+        if (previousDay is { Enabled: true, NextDay: true, CutoffMinutes: >= 0 and <= 1439 })
+        {
+            var previousCutoff = MakeCutoff(local.Date.AddDays(-1), previousDay.CutoffMinutes, true, zone);
+            if (now < previousCutoff)
+            {
+                return previousCutoff - now;
+            }
+        }
+
+        var day = configuration.Days[(int)local.DayOfWeek];
         if (day is null || !day.Enabled || day.CutoffMinutes is < 0 or > 1439)
         {
             return null;
         }
 
-        var localCutoff = DateTime.SpecifyKind(local.Date.AddMinutes(day.CutoffMinutes), DateTimeKind.Unspecified);
+        var cutoff = MakeCutoff(local.Date, day.CutoffMinutes, day.NextDay, zone);
+        var remaining = cutoff - now;
+        return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+    }
+
+    private static DateTimeOffset MakeCutoff(DateTime date, int minutes, bool nextDay, TimeZoneInfo zone)
+    {
+        var localCutoff = DateTime.SpecifyKind(date.AddDays(nextDay ? 1 : 0).AddMinutes(minutes), DateTimeKind.Unspecified);
         while (zone.IsInvalidTime(localCutoff))
         {
             localCutoff = localCutoff.AddMinutes(1);
@@ -35,9 +56,7 @@ public static class FinishByPolicy
         var offset = zone.IsAmbiguousTime(localCutoff)
             ? zone.GetAmbiguousTimeOffsets(localCutoff).Max()
             : zone.GetUtcOffset(localCutoff);
-        var cutoff = new DateTimeOffset(localCutoff, offset);
-        var remaining = cutoff - now;
-        return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+        return new DateTimeOffset(localCutoff, offset);
     }
 
     public static bool ShouldShow(BaseItemDto item, TimeSpan remaining)

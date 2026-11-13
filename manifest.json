@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.1.2.0",
+        "changelog": "Add overnight cutoffs, next-episode series filtering, and a one-hour override.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.2.0.zip",
+        "checksum": "6d429c60439ef82f60b66c3f3585a3a1",
+        "timestamp": "2026-11-13T18:40:14Z"
+      },
+      {
         "version": "1.1.1.0",
         "changelog": "Fix day checkboxes and allow a configured time zone.",
         "targetAbi": "12.4.0.0",
@@ -22,6 +30,14 @@
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.0.0.zip",
         "checksum": "5e733b2bba127fabdc9d1ac1fb60aceb",
         "timestamp": "2026-11-13T04:28:55Z"
+      },
+      {
+        "version": "1.0.2.0",
+        "changelog": "Add overnight cutoffs, next-episode series filtering, and a one-hour override.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.0.2.0_jellyfin10.11.zip",
+        "checksum": "14fdcb2dbf502dd91f6955ecfe58ea2f",
+        "timestamp": "2026-11-13T18:40:14Z"
       },
       {
         "version": "1.0.1.0",
