@@ -8,12 +8,28 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.1.1.0",
+        "changelog": "Fix day checkboxes and allow a configured time zone.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.1.0.zip",
+        "checksum": "868949ed8d08f3d1b771fc8b12f01257",
+        "timestamp": "2026-11-13T18:09:10Z"
+      },
+      {
         "version": "1.1.0.0",
         "changelog": "Initial public release for Jellyfin 12.4.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.0.0.zip",
         "checksum": "5e733b2bba127fabdc9d1ac1fb60aceb",
         "timestamp": "2026-11-13T04:28:55Z"
+      },
+      {
+        "version": "1.0.1.0",
+        "changelog": "Fix day checkboxes and allow a configured time zone.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.0.1.0_jellyfin10.11.zip",
+        "checksum": "6495a22eac028f4576f6f04ae150bfff",
+        "timestamp": "2026-11-13T18:09:10Z"
       },
       {
         "version": "1.0.0.0",

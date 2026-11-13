@@ -44,6 +44,18 @@ public class PolicyTests
     }
 
     [Fact]
+    public void ConfiguredTimeZoneControlsDayAndCutoff()
+    {
+        var config = new PluginConfiguration { TimeZoneId = "Asia/Bangkok" };
+        config.Days[(int)DayOfWeek.Sunday].Enabled = true;
+        config.Days[(int)DayOfWeek.Sunday].CutoffMinutes = 21 * 60;
+
+        // Sunday 20:30 in Bangkok is Sunday 13:30 UTC.
+        var now = new DateTimeOffset(2026, 11, 15, 13, 30, 0, TimeSpan.Zero);
+        Assert.Equal(TimeSpan.FromMinutes(30), FinishByPolicy.GetTimeRemaining(config, now));
+    }
+
+    [Fact]
     public void UnknownRuntimeIsHiddenButFoldersStayVisible()
     {
         Assert.False(FinishByPolicy.ShouldShow(new BaseItemDto { Type = BaseItemKind.Movie }, TimeSpan.FromHours(1)));

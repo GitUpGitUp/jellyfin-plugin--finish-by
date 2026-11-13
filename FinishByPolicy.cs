@@ -8,7 +8,10 @@ public static class FinishByPolicy
 {
     public static TimeSpan? GetTimeRemaining(PluginConfiguration configuration, DateTimeOffset now)
     {
-        var zone = TimeZoneInfo.Local;
+        var zone = !string.IsNullOrWhiteSpace(configuration.TimeZoneId)
+            && TimeZoneInfo.TryFindSystemTimeZoneById(configuration.TimeZoneId, out var configuredZone)
+            ? configuredZone
+            : TimeZoneInfo.Local;
         var local = TimeZoneInfo.ConvertTime(now, zone);
         var index = (int)local.DayOfWeek;
         if (configuration.Days is null || index >= configuration.Days.Length)

@@ -9,9 +9,14 @@
         <div data-role="content">
             <div class="content-primary">
                 <h2>Finish By</h2>
-                <p>Show playable items that can finish by the selected time on each enabled day. Times use the Jellyfin server's local time zone. A disabled day has no cutoff.</p>
+                <p>Show playable items that can finish by the selected time on each enabled day. A disabled day has no cutoff.</p>
                 <p>Folders and shows stay visible so you can browse them. Playable items with no known runtime are hidden on enabled days.</p>
                 <form id="FinishByConfigForm">
+                    <div class="inputContainer">
+                        <label class="inputLabel" for="finishByTimeZone">Time zone</label>
+                        <input type="text" is="emby-input" id="finishByTimeZone" required>
+                        <div class="fieldDescription">Detected from this device on first setup. This time zone applies to all Jellyfin users. Example: Asia/Bangkok.</div>
+                    </div>
                     <div id="FinishByDays"></div>
                     <button is="emby-button" type="submit" class="raised button-submit block emby-button">Save</button>
                 </form>
@@ -23,13 +28,16 @@
                 var page = document.querySelector('#FinishByConfigPage');
                 var form = page.querySelector('#FinishByConfigForm');
                 var daysContainer = page.querySelector('#FinishByDays');
+                var timeZoneInput = page.querySelector('#finishByTimeZone');
                 var pluginId = '4bcae5ca-6589-47c6-9f8c-57f0cf5e2f41';
                 var names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                var deviceTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
                 daysContainer.innerHTML = names.map(function (name, index) {
-                    return '<div class="inputContainer" style="display:flex;align-items:center;gap:1rem">' +
-                        '<label class="emby-checkbox-label" style="min-width:9rem">' +
-                        '<input type="checkbox" is="emby-checkbox" id="finishByEnabled' + index + '"> ' + name + '</label>' +
+                    return '<div class="inputContainer" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem 1rem">' +
+                        '<label class="emby-checkbox-label" style="width:auto;min-width:9rem">' +
+                        '<input type="checkbox" is="emby-checkbox" id="finishByEnabled' + index + '">' +
+                        '<span>' + name + '</span></label>' +
                         '<label for="finishByTime' + index + '">Finish by</label>' +
                         '<input type="time" is="emby-input" id="finishByTime' + index + '" value="21:00" required>' +
                         '</div>';
@@ -38,6 +46,7 @@
                 page.addEventListener('pageshow', function () {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        timeZoneInput.value = config.TimeZoneId || deviceTimeZone;
                         names.forEach(function (_, index) {
                             var day = config.Days && config.Days[index] || { Enabled: false, CutoffMinutes: 1260 };
                             page.querySelector('#finishByEnabled' + index).checked = !!day.Enabled;
@@ -55,8 +64,15 @@
 
                 form.addEventListener('submit', function (event) {
                     event.preventDefault();
+                    try {
+                        new Intl.DateTimeFormat('en', { timeZone: timeZoneInput.value.trim() });
+                    } catch (error) {
+                        Dashboard.alert('Enter a valid time zone, such as Asia/Bangkok.');
+                        return;
+                    }
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        config.TimeZoneId = timeZoneInput.value.trim();
                         config.Days = names.map(function (_, index) {
                             var time = page.querySelector('#finishByTime' + index).value.split(':');
                             return {

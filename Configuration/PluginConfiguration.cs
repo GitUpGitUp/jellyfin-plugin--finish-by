@@ -12,6 +12,9 @@ public sealed class DayCutoff
 
 public sealed class PluginConfiguration : BasePluginConfiguration
 {
+    // Empty keeps the server's local time zone until a zone is saved in settings.
+    public string TimeZoneId { get; set; } = string.Empty;
+
     // The indices match DayOfWeek (Sunday = 0).
     public DayCutoff[] Days { get; set; } = Enumerable.Range(0, 7)
         .Select(_ => new DayCutoff())
