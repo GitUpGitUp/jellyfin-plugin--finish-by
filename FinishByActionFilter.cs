@@ -104,7 +104,10 @@ public sealed class FinishByActionFilter : IAsyncActionFilter
             .ThenBy(episode => episode.IndexNumber ?? int.MaxValue)
             .ToArray();
 
-        var candidates = episodes.Select(episode => (Episode: episode, Data: _userData.GetUserData(user, episode)))
+        var progress = episodes.Select(episode => (Episode: episode, Data: _userData.GetUserData(user, episode)))
+            .ToArray();
+        var lastWatched = Array.FindLastIndex(progress, pair => pair.Data?.Played == true);
+        var candidates = progress.Skip(lastWatched + 1)
             .Where(pair => pair.Data?.Played != true)
             .ToArray();
         var next = candidates.FirstOrDefault(pair => pair.Data?.PlaybackPositionTicks > 0);
