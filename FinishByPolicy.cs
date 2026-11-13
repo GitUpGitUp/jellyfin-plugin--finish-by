@@ -6,6 +6,8 @@ namespace Jellyfin.Plugin.FinishBy;
 
 public static class FinishByPolicy
 {
+    private const int MorningBoundaryMinutes = 6 * 60;
+
     public static TimeSpan? GetTimeRemaining(PluginConfiguration configuration, DateTimeOffset now)
     {
         if (configuration.OverrideUntilUnixSeconds > now.ToUnixTimeSeconds())
@@ -24,7 +26,7 @@ public static class FinishByPolicy
         }
 
         var previousDay = configuration.Days[((int)local.DayOfWeek + 6) % 7];
-        if (previousDay is { Enabled: true, NextDay: true, CutoffMinutes: >= 0 and <= 1439 })
+        if (previousDay is { Enabled: true, CutoffMinutes: >= 0 and < MorningBoundaryMinutes })
         {
             var previousCutoff = MakeCutoff(local.Date.AddDays(-1), previousDay.CutoffMinutes, true, zone);
             if (now < previousCutoff)
@@ -39,7 +41,7 @@ public static class FinishByPolicy
             return null;
         }
 
-        var cutoff = MakeCutoff(local.Date, day.CutoffMinutes, day.NextDay, zone);
+        var cutoff = MakeCutoff(local.Date, day.CutoffMinutes, day.CutoffMinutes < MorningBoundaryMinutes, zone);
         var remaining = cutoff - now;
         return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
     }

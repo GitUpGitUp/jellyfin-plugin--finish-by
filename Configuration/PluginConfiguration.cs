@@ -9,8 +9,6 @@ public sealed class DayCutoff
     // Minutes after midnight in the server's local time zone.
     public int CutoffMinutes { get; set; } = 21 * 60;
 
-    // The cutoff time falls on the following calendar day.
-    public bool NextDay { get; set; }
 }
 
 public sealed class PluginConfiguration : BasePluginConfiguration

@@ -59,13 +59,22 @@ public class PolicyTests
     public void PreviousDayRuleContinuesAfterMidnight()
     {
         var config = new PluginConfiguration { TimeZoneId = "UTC" };
-        config.Days[(int)DayOfWeek.Friday] = new DayCutoff { Enabled = true, NextDay = true, CutoffMinutes = 2 * 60 };
+        config.Days[(int)DayOfWeek.Friday] = new DayCutoff { Enabled = true, CutoffMinutes = 2 * 60 };
         Assert.Equal(TimeSpan.FromHours(3), FinishByPolicy.GetTimeRemaining(
             config, new DateTimeOffset(2026, 11, 13, 23, 0, 0, TimeSpan.Zero)));
         Assert.Equal(TimeSpan.FromMinutes(30), FinishByPolicy.GetTimeRemaining(
             config, new DateTimeOffset(2026, 11, 14, 1, 30, 0, TimeSpan.Zero)));
         Assert.Null(FinishByPolicy.GetTimeRemaining(
             config, new DateTimeOffset(2026, 11, 14, 2, 30, 0, TimeSpan.Zero)));
+    }
+
+    [Fact]
+    public void AfternoonCutoffDoesNotMoveToTomorrow()
+    {
+        var config = new PluginConfiguration { TimeZoneId = "UTC" };
+        config.Days[(int)DayOfWeek.Friday] = new DayCutoff { Enabled = true, CutoffMinutes = 16 * 60 };
+        Assert.Equal(TimeSpan.Zero, FinishByPolicy.GetTimeRemaining(
+            config, new DateTimeOffset(2026, 11, 13, 16, 1, 0, TimeSpan.Zero)));
     }
 
     [Fact]
