@@ -55,14 +55,25 @@
                         : 'Cutoff rules are active.';
                 }
 
+                function refreshLibraryAndPage() {
+                    return ApiClient.ajax({
+                        type: 'POST',
+                        url: ApiClient.getUrl('Library/Refresh')
+                    }).then(function () {
+                        window.location.reload();
+                    }).catch(function (error) {
+                        Dashboard.hideLoadingMsg();
+                        Dashboard.alert('Settings saved, but the library scan could not start: ' + error);
+                    });
+                }
+
                 function setOverride(seconds) {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(pluginId).then(function (config) {
                         config.OverrideUntilUnixSeconds = seconds ? Math.floor(Date.now() / 1000) + seconds : 0;
                         return ApiClient.updatePluginConfiguration(pluginId, config).then(function () {
                             updateOverrideStatus(config);
-                            Dashboard.hideLoadingMsg();
-                            Dashboard.alert('Override saved. Refresh the library to see the change.');
+                            return refreshLibraryAndPage();
                         });
                     }).catch(function (error) {
                         Dashboard.hideLoadingMsg();
@@ -112,8 +123,8 @@
                             };
                         });
                         return ApiClient.updatePluginConfiguration(pluginId, config);
-                    }).then(function (response) {
-                        Dashboard.processPluginConfigurationUpdateResult(response);
+                    }).then(function () {
+                        return refreshLibraryAndPage();
                     }).catch(function (error) {
                         Dashboard.hideLoadingMsg();
                         Dashboard.alert('Could not save Finish By settings: ' + error);

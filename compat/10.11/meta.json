@@ -6,7 +6,7 @@
   "overview": "Daily finish-time filter for Jellyfin library lists",
   "owner": "GitUpGitUp",
   "targetAbi": "10.11.11.0",
-  "version": "1.0.4.0",
+  "version": "1.0.5.0",
   "status": 0,
   "autoUpdate": false,
   "assemblies": ["Jellyfin.Plugin.FinishBy.dll"]

@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.1.5.0",
+        "changelog": "Start a library scan and reload the web page after settings or override changes.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.5.0.zip",
+        "checksum": "0897d9121a821fb6ac57fc499f2f9fad",
+        "timestamp": "2026-11-13T19:21:08Z"
+      },
+      {
         "version": "1.1.4.0",
         "changelog": "Choose the next episode after the latest watched episode when filtering series.",
         "targetAbi": "12.4.0.0",
@@ -46,6 +54,14 @@
         "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.1.0.0.zip",
         "checksum": "5e733b2bba127fabdc9d1ac1fb60aceb",
         "timestamp": "2026-11-13T04:28:55Z"
+      },
+      {
+        "version": "1.0.5.0",
+        "changelog": "Start a library scan and reload the web page after settings or override changes.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://raw.githubusercontent.com/GitUpGitUp/jellyfin-plugin--finish-by/main/finishby_1.0.5.0_jellyfin10.11.zip",
+        "checksum": "3e4e7b7b33c0cdb983e89e051fa04419",
+        "timestamp": "2026-11-13T19:21:08Z"
       },
       {
         "version": "1.0.4.0",
