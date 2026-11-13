@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Finish By</title>
+</head>
+<body>
+    <div id="FinishByConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <h2>Finish By</h2>
+                <p>Show playable items that can finish by the selected time on each enabled day. Times use the Jellyfin server's local time zone. A disabled day has no cutoff.</p>
+                <p>Folders and shows stay visible so you can browse them. Playable items with no known runtime are hidden on enabled days.</p>
+                <form id="FinishByConfigForm">
+                    <div id="FinishByDays"></div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button">Save</button>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            (function () {
+                'use strict';
+                var page = document.querySelector('#FinishByConfigPage');
+                var form = page.querySelector('#FinishByConfigForm');
+                var daysContainer = page.querySelector('#FinishByDays');
+                var pluginId = '4bcae5ca-6589-47c6-9f8c-57f0cf5e2f41';
+                var names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                daysContainer.innerHTML = names.map(function (name, index) {
+                    return '<div class="inputContainer" style="display:flex;align-items:center;gap:1rem">' +
+                        '<label class="emby-checkbox-label" style="min-width:9rem">' +
+                        '<input type="checkbox" is="emby-checkbox" id="finishByEnabled' + index + '"> ' + name + '</label>' +
+                        '<label for="finishByTime' + index + '">Finish by</label>' +
+                        '<input type="time" is="emby-input" id="finishByTime' + index + '" value="21:00" required>' +
+                        '</div>';
+                }).join('');
+
+                page.addEventListener('pageshow', function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        names.forEach(function (_, index) {
+                            var day = config.Days && config.Days[index] || { Enabled: false, CutoffMinutes: 1260 };
+                            page.querySelector('#finishByEnabled' + index).checked = !!day.Enabled;
+                            var hours = Math.floor(day.CutoffMinutes / 60);
+                            var minutes = day.CutoffMinutes % 60;
+                            page.querySelector('#finishByTime' + index).value =
+                                String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+                        });
+                        Dashboard.hideLoadingMsg();
+                    }).catch(function (error) {
+                        Dashboard.hideLoadingMsg();
+                        Dashboard.alert('Could not load Finish By settings: ' + error);
+                    });
+                });
+
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        config.Days = names.map(function (_, index) {
+                            var time = page.querySelector('#finishByTime' + index).value.split(':');
+                            return {
+                                Enabled: page.querySelector('#finishByEnabled' + index).checked,
+                                CutoffMinutes: Number(time[0]) * 60 + Number(time[1])
+                            };
+                        });
+                        return ApiClient.updatePluginConfiguration(pluginId, config);
+                    }).then(function (response) {
+                        Dashboard.processPluginConfigurationUpdateResult(response);
+                    }).catch(function (error) {
+                        Dashboard.hideLoadingMsg();
+                        Dashboard.alert('Could not save Finish By settings: ' + error);
+                    });
+                });
+            }());
+        </script>
+    </div>
+</body>
+</html>
